@@ -83,7 +83,7 @@ async function graph(data, month, interaction) {
     const buffer = await chartJSNodeCanvas.renderToBuffer(configuration);
     // await fs.writeFile('./example.png', buffer, 'base64');
 
-    interaction.editReply({content: ":eyes:", ephemeral: false, files: [buffer]});
+    interaction.editReply({content: ":eyes:", ephemeral: true, files: [buffer]});
     
 }
 
@@ -105,7 +105,7 @@ client.on("interactionCreate", (interaction) => {
     if (interaction.isCommand()) {
         if (interaction.commandName == "record")
         {
-            interaction.reply({content: "Getting data...", ephemeral: false})
+            interaction.reply({content: "Getting data...", ephemeral: true})
             const data = {
                 "user_id": interaction.user.id,
                 "weight": parseFloat(interaction.options.data[0].value)
@@ -133,9 +133,9 @@ client.on("interactionCreate", (interaction) => {
                                 .setStyle('SUCCESS')
                         );
 
-                        interaction.reply({content: "You are not in the database. Would you like to add yourself? :eyes:", components: [row], ephemeral: true})
+                        interaction.editReply({content: "You are not in the database. Would you like to add yourself? :eyes:", components: [row], ephemeral: true})
                     } else {
-                        interaction.reply(data.status.toString())
+                        interaction.editReply(data.status.toString())
                     }
                     
                 }
@@ -143,15 +143,30 @@ client.on("interactionCreate", (interaction) => {
         }
         else if (interaction.commandName == "progress")
         {
-            interaction.reply({content: "Getting data...", ephemeral: false})
+            interaction.reply({content: "Getting data...", ephemeral: true})
 
             fetch(`https://ruby-weight-management.herokuapp.com/weight-${interaction.user.id}/`)
             .then(response => response.json())
             .then(data => {
-                /*
-                    This is where the plotting should happen!
-                */
-                graph(data.weight, "2021-11", interaction);
+                if (!data.status.toString().includes("ERROR")) {
+                    graph(data.weight, data.current_month, interaction);
+                } else {
+                    if (data.status.toString().includes("not in the database"))
+                    {
+                        const row = new MessageActionRow()
+                        .addComponents(
+                            new MessageButton()
+                                .setCustomId('new_user')
+                                .setLabel('Begin Journey')
+                                .setStyle('SUCCESS')
+                        );
+
+                        interaction.editReply({content: "You are not in the database. Would you like to add yourself? :eyes:", components: [row], ephemeral: true})
+                    } else {
+                        interaction.editReply(data.status.toString())
+                    }
+                }
+                
             });
             
         }
