@@ -6,8 +6,8 @@ const configs = require("./config.json")
 const commands = [
   /*new SlashCommandBuilder().setName("record").setDescription("Records your current weight. NOTE: THIS IS IN BETA. DO NOT USE.").addStringOption(option => 
     option.setName("weight").setDescription("How much do you weight? :)").setRequired(true)
-  ),
-  new SlashCommandBuilder().setName("progress").setDescription("Wanna see your progress?")*/
+  ),*/
+  new SlashCommandBuilder().setName("progress").setDescription("Wanna see your progress?")
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: '9' }).setToken(configs.BOT_TOKEN);

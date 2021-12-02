@@ -1,9 +1,91 @@
 import configs from './config.json'
 import fetch from "node-fetch";
+import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
 import { Client, Intents, MessageActionRow, MessageButton } from "discord.js";
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
 
+// TODO: remove "false" eph, 
+
 const version = "2021.12.1 BETA";
+
+async function graph(data, month, interaction) {
+    var labels = []
+    // Sets the labels for the x line
+    for (const i of Array(31).keys()) {
+        if (i+1 < 10) {
+            labels.push("0" + String(i+1))
+        } else {
+            labels.push(String(i+1))
+        }
+        
+    }
+
+    var month_data = {}
+
+    var data_keys = Object.keys(data)
+
+    for (const i in data_keys) {
+        if (data_keys[i].includes(month)) {
+            month_data[data_keys[i]] = data[data_keys[i]]
+        }
+    }
+
+    var data_keys = Object.keys(month_data)
+    var data_to_graph = []
+
+    for (const i in data_keys) {
+        data_to_graph.push({x: data_keys[i].slice(8), y: month_data[data_keys[i]]})
+    }
+
+
+    const width = 600;
+    const height = 500;
+    const configuration = {
+        type: "line",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Weight',
+                data: data_to_graph,
+                fill: true,
+                borderColor: '#52CD7C',
+                backgroundColor: "#2F3136",
+                tension: 0.5
+                }]
+        },
+        options: {
+            indexAxis: 'x',
+            scales: {
+                y: {
+                    beginAtZero: false,
+                }
+            }
+        },
+        plugins: [{
+            id: 'background-colour',
+            beforeDraw: (chart) => {
+                const ctx = chart.ctx;
+                ctx.save();
+                ctx.fillStyle = '#36393F';
+                ctx.fillRect(0, 0, width, height);
+                ctx.restore();
+            }
+        }]
+    };
+    const chartCallback = (ChartJS) => {
+        ChartJS.defaults.color = "#DBDDDD"
+        ChartJS.defaults.font.weight = "bold"
+        ChartJS.defaults.elements.point.radius = 3
+        ChartJS.defaults.font.size = 15
+        // ChartJS.defaults.layout.padding = 10
+    };
+    const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, chartCallback });
+    const buffer = await chartJSNodeCanvas.renderToBuffer(configuration);
+    // await fs.writeFile('./example.png', buffer, 'base64');
+
+    interaction.editReply({content: ":eyes:", ephemeral: false, files: [buffer]});
+    
+}
 
 client.on("ready", () => {
     /*
@@ -23,6 +105,7 @@ client.on("interactionCreate", (interaction) => {
     if (interaction.isCommand()) {
         if (interaction.commandName == "record")
         {
+            interaction.reply({content: "Getting data...", ephemeral: false})
             const data = {
                 "user_id": interaction.user.id,
                 "weight": parseFloat(interaction.options.data[0].value)
@@ -37,7 +120,7 @@ client.on("interactionCreate", (interaction) => {
             .then(data => {
                 if (!data.status.toString().includes("ERROR"))
                 {
-                    interaction.reply({content: JSON.stringify(data), ephemeral: true})
+                    graph(data.weight, data.current_month, interaction);
                     
                 } else {
                     if (data.status.toString().includes("not in the database"))
@@ -60,43 +143,15 @@ client.on("interactionCreate", (interaction) => {
         }
         else if (interaction.commandName == "progress")
         {
+            interaction.reply({content: "Getting data...", ephemeral: false})
+
             fetch(`https://ruby-weight-management.herokuapp.com/weight-${interaction.user.id}/`)
             .then(response => response.json())
             .then(data => {
                 /*
                     This is where the plotting should happen!
                 */
-                    var trace1 = {
-                        x: [1, 2, 3, 4],
-                        y: [10, 15, 13, 17],
-                        mode: 'markers',
-                        name: 'Scatter'
-                      };
-                      
-                      var trace2 = {
-                        x: [2, 3, 4, 5],
-                        y: [16, 5, 11, 9],
-                        mode: 'lines',
-                        name: 'Lines'
-                      };
-                      
-                      var trace3 = {
-                        x: [1, 2, 3, 4],
-                        y: [12, 9, 15, 12],
-                        mode: 'lines+markers',
-                        name: 'Scatter + Lines'
-                      };
-                      
-                      var data = [ trace1, trace2, trace3 ];
-                      
-                      var layout = {
-                        title:'Adding Names to Line and Scatter Plot'
-                      };
-                      
-                      Plotly.newPlot('myDiv', data, layout);
-
-                console.log(data)
-                interaction.reply({content: JSON.stringify(data), ephemeral: true});
+                graph(data.weight, "2021-11", interaction);
             });
             
         }
@@ -108,7 +163,7 @@ client.on("interactionCreate", (interaction) => {
             const data = {
                 "user_id": interaction.user.id,
             }
-        
+            
             fetch("https://ruby-weight-management.herokuapp.com/new-user/", {
                 "method": "POST",
                 "body": JSON.stringify(data),
