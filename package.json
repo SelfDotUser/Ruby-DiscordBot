@@ -5,7 +5,8 @@
   "type": "module",
   "main": "Ruby.js",
   "scripts": {
-    "test": "node --experimental-json-modules ./src/Ruby.js"
+    "test": "node --experimental-json-modules ./src/Ruby.js",
+    "start": "node --experimental-json-modules ./src/Ruby.js"
   },
   "author": "SelfDotUser",
   "license": "ISC",
