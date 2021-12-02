@@ -1,1 +1,1 @@
-web: node --experimental-json-modules ./src/Ruby.js
+worker: node --experimental-json-modules ./src/Ruby.js
