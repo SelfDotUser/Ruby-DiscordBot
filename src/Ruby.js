@@ -198,7 +198,7 @@ client.on("interactionCreate", (interaction) => {
     }
 });
 
-client.login(configs.BOT_TOKEN);
+client.login(process.env.BOT_TOKEN);
 
 /*
 node --experimental-json-modules Ruby.js
