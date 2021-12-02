@@ -4,7 +4,7 @@ import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
 import { Client, Intents, MessageActionRow, MessageButton } from "discord.js";
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
 
-const version = "2021.12.1 BETA";
+const version = "2021.12.2";
 
 async function graph(data, month, interaction) {
     var labels = []
@@ -117,6 +117,9 @@ client.on("interactionCreate", (interaction) => {
         if (interaction.commandName == "record")
         {
             interaction.reply({content: "Getting data...", ephemeral: true})
+            .catch(reason => {
+                console.log("ERROR: I failed to send a message.\n" + reason.toString())
+            }); 
             const data = {
                 "user_id": interaction.user.id,
                 "weight": parseFloat(interaction.options.data[0].value)
@@ -150,7 +153,10 @@ client.on("interactionCreate", (interaction) => {
                     }
                     
                 }
-            })
+            }).catch(reason => {
+                console.log("ERROR: I failed to get data from /update-weight/.\n" + reason.toString());
+                interaction.editReply({content: "Sorry, an error occured. Please let SelfDotUser know.", ephemeral: true})
+            });
         }
         else if (interaction.commandName == "progress")
         {
@@ -178,7 +184,11 @@ client.on("interactionCreate", (interaction) => {
                     }
                 }
                 
-            });
+            })
+            .catch(reason => {
+                console.log(`ERROR: Failed to get data from /weight-${interaction.user.id}/.` + "\n" + reason.toString())
+                interaction.editReply({content:"Sorry, an error occured. Please let SelfDotUser know.", ephemeral: true});
+            })
             
         }
     }
@@ -200,10 +210,12 @@ client.on("interactionCreate", (interaction) => {
                 if (!data.status.toString().includes("ERROR")) {
                     interaction.reply({content: "You're in! :partying_face: Hit up `/record` to start graphing!", ephemeral: true})
                 } else {
-                    interaction.reply("An error occured. :(")
+                    interaction.reply("An error occured. Please let Matt know.")
                     console.log(data.status)
                 }
                 
+            }).catch(reason => {
+                console.log("ERROR: Failed to post to /new-user/.\n" + reason.toString());
             });
         }
     }
