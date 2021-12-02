@@ -65,8 +65,11 @@ async function graph(data, month, interaction) {
             scales: {
                 y: {
                     beginAtZero: false,
+                    suggestedMin: Math.min(...Object.values(month_data))-10,
+                    suggestedMax: Math.max(...Object.values(month_data))+10
                 }
-            }
+            },
+            devicePixelRatio: 2
         },
         plugins: [{
             id: 'background-colour',
@@ -85,10 +88,11 @@ async function graph(data, month, interaction) {
         ChartJS.defaults.elements.point.radius = 3
         ChartJS.defaults.font.size = 15
         ChartJS.defaults.plugins.legend.labels.boxHeight = 0
+        ChartJS.defaults.layout.padding = 20
     };
     const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, chartCallback });
     const buffer = await chartJSNodeCanvas.renderToBuffer(configuration);
-    //await fs.writeFile('./graph.png', buffer, 'base64');
+    // await fs.writeFile('./graph.png', buffer, 'base64');
 
     interaction.editReply({content: ":eyes:", ephemeral: true, files: [buffer]});
     
