@@ -4,8 +4,6 @@ import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
 import { Client, Intents, MessageActionRow, MessageButton } from "discord.js";
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
 
-// TODO: remove "false" eph, 
-
 const version = "2021.12.1 BETA";
 
 async function graph(data, month, interaction) {
