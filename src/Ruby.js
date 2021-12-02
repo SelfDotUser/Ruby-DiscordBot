@@ -48,8 +48,17 @@ async function graph(data, month, interaction) {
                 fill: true,
                 borderColor: '#52CD7C',
                 backgroundColor: "#2F3136",
-                tension: 0.5
-                }]
+                tension: 0.2,
+                },
+            {
+                label: "Threshold",
+                data: [{x: "01", y: month_data[data_keys[0]]}, {x: "31", y: month_data[data_keys[0]]}],
+                fill: false,
+                borderColor: 'black',
+                backgroundColor: "#2F3136",
+                tension: 0,
+                elements: {point: {radius: 0}, line: {borderDash: [5]}}
+            }]
         },
         options: {
             indexAxis: 'x',
@@ -75,11 +84,11 @@ async function graph(data, month, interaction) {
         ChartJS.defaults.font.weight = "bold"
         ChartJS.defaults.elements.point.radius = 3
         ChartJS.defaults.font.size = 15
-        // ChartJS.defaults.layout.padding = 10
+        ChartJS.defaults.plugins.legend.labels.boxHeight = 0
     };
     const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height, chartCallback });
     const buffer = await chartJSNodeCanvas.renderToBuffer(configuration);
-    // await fs.writeFile('./example.png', buffer, 'base64');
+    //await fs.writeFile('./graph.png', buffer, 'base64');
 
     interaction.editReply({content: ":eyes:", ephemeral: true, files: [buffer]});
     
