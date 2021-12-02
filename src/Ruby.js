@@ -1,13 +1,13 @@
 // import configs from './config.json'
 import fetch from "node-fetch";
-import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
+import { ChartJSNodeCanvas } from "chartjs-node-canvas";
 import { Client, Intents, MessageActionRow, MessageButton } from "discord.js";
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
 
 const version = "2021.12.2";
 
 async function graph(data, month, interaction) {
-    var labels = []
+    var labels = [];
     // Sets the labels for the x line
     for (const i of Array(31).keys()) {
         if (i+1 < 10) {
@@ -15,7 +15,7 @@ async function graph(data, month, interaction) {
         } else {
             labels.push(String(i+1))
         }
-        
+
     }
 
     var month_data = {}
@@ -43,10 +43,10 @@ async function graph(data, month, interaction) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Weight',
+                label: "Weight",
                 data: data_to_graph,
                 fill: true,
-                borderColor: '#52CD7C',
+                borderColor: "#52CD7C",
                 backgroundColor: "#2F3136",
                 tension: 0.2,
                 },
@@ -54,14 +54,14 @@ async function graph(data, month, interaction) {
                 label: "Threshold",
                 data: [{x: "01", y: month_data[data_keys[0]]}, {x: "31", y: month_data[data_keys[0]]}],
                 fill: false,
-                borderColor: 'black',
+                borderColor: "black",
                 backgroundColor: "#2F3136",
                 tension: 0,
                 elements: {point: {radius: 0}, line: {borderDash: [5]}}
             }]
         },
         options: {
-            indexAxis: 'x',
+            indexAxis: "x",
             scales: {
                 y: {
                     beginAtZero: false,
@@ -72,11 +72,11 @@ async function graph(data, month, interaction) {
             devicePixelRatio: 2
         },
         plugins: [{
-            id: 'background-colour',
+            id: "background-colour",
             beforeDraw: (chart) => {
                 const ctx = chart.ctx;
                 ctx.save();
-                ctx.fillStyle = '#36393F';
+                ctx.fillStyle = "#36393F";
                 ctx.fillRect(0, 0, width, height);
                 ctx.restore();
             }
@@ -95,7 +95,7 @@ async function graph(data, month, interaction) {
     // await fs.writeFile('./graph.png', buffer, 'base64');
 
     interaction.editReply({content: ":eyes:", ephemeral: true, files: [buffer]});
-    
+
 }
 
 client.on("ready", () => {
@@ -119,39 +119,39 @@ client.on("interactionCreate", (interaction) => {
             interaction.reply({content: "Getting data...", ephemeral: true})
             .catch(reason => {
                 console.log("ERROR: I failed to send a message.\n" + reason.toString())
-            }); 
+            });
             const data = {
                 "user_id": interaction.user.id,
                 "weight": parseFloat(interaction.options.data[0].value)
             }
-        
+
             fetch("https://ruby-weight-management.herokuapp.com/update-weight/", {
                 "method": "POST",
                 "body": JSON.stringify(data),
-                "headers": { 'Content-Type': 'application/json' }
+                "headers": { "Content-Type": "application/json" }
             })
             .then(response => response.json())
             .then(data => {
                 if (!data.status.toString().includes("ERROR"))
                 {
                     graph(data.weight, data.current_month, interaction);
-                    
+
                 } else {
                     if (data.status.toString().includes("not in the database"))
                     {
                         const row = new MessageActionRow()
                         .addComponents(
                             new MessageButton()
-                                .setCustomId('new_user')
-                                .setLabel('Begin Journey')
-                                .setStyle('SUCCESS')
+                                .setCustomId("new_user")
+                                .setLabel("Begin Journey")
+                                .setStyle("SUCCESS")
                         );
 
                         interaction.editReply({content: "You are not in the database. Would you like to add yourself? :eyes:", components: [row], ephemeral: true})
                     } else {
                         interaction.editReply(data.status.toString())
                     }
-                    
+
                 }
             }).catch(reason => {
                 console.log("ERROR: I failed to get data from /update-weight/.\n" + reason.toString());
@@ -173,9 +173,9 @@ client.on("interactionCreate", (interaction) => {
                         const row = new MessageActionRow()
                         .addComponents(
                             new MessageButton()
-                                .setCustomId('new_user')
-                                .setLabel('Begin Journey')
-                                .setStyle('SUCCESS')
+                                .setCustomId("new_user")
+                                .setLabel("Begin Journey")
+                                .setStyle("SUCCESS")
                         );
 
                         interaction.editReply({content: "You are not in the database. Would you like to add yourself? :eyes:", components: [row], ephemeral: true})
@@ -183,13 +183,13 @@ client.on("interactionCreate", (interaction) => {
                         interaction.editReply(data.status.toString())
                     }
                 }
-                
+
             })
             .catch(reason => {
                 console.log(`ERROR: Failed to get data from /weight-${interaction.user.id}/.` + "\n" + reason.toString())
                 interaction.editReply({content:"Sorry, an error occured. Please let SelfDotUser know.", ephemeral: true});
             })
-            
+
         }
     }
     else if (interaction.isButton())
@@ -199,11 +199,11 @@ client.on("interactionCreate", (interaction) => {
             const data = {
                 "user_id": interaction.user.id,
             }
-            
+
             fetch("https://ruby-weight-management.herokuapp.com/new-user/", {
                 "method": "POST",
                 "body": JSON.stringify(data),
-                "headers": { 'Content-Type': 'application/json' }
+                "headers": { "Content-Type": "application/json" }
             })
             .then(response => response.json())
             .then(data => {
@@ -213,7 +213,7 @@ client.on("interactionCreate", (interaction) => {
                     interaction.reply("An error occured. Please let Matt know.")
                     console.log(data.status)
                 }
-                
+
             }).catch(reason => {
                 console.log("ERROR: Failed to post to /new-user/.\n" + reason.toString());
             });
