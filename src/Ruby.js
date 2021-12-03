@@ -43,7 +43,7 @@ async function graph(data, interaction) {
                 },
             {
                 label: "Threshold",
-                data: [{x: "01", y: month_data[data_keys[0]]}, {x: "31", y: month_data[data_keys[0]]}],
+                data: [{x: "01", y: data[data_keys[0]]}, {x: "31", y: data[data_keys[0]]}],
                 fill: false,
                 borderColor: "black",
                 backgroundColor: "#2F3136",
@@ -56,8 +56,8 @@ async function graph(data, interaction) {
             scales: {
                 y: {
                     beginAtZero: false,
-                    suggestedMin: Math.min(...Object.values(month_data))-10,
-                    suggestedMax: Math.max(...Object.values(month_data))+10
+                    suggestedMin: Math.min(...Object.values(data))-10,
+                    suggestedMax: Math.max(...Object.values(data))+10
                 }
             },
             devicePixelRatio: 2
