@@ -6,7 +6,7 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 
 const version = "2021.12.2";
 
-async function graph(data, month, interaction) {
+async function graph(data, interaction) {
     var labels = [];
     // Sets the labels for the x line
     for (const i of Array(31).keys()) {
@@ -18,21 +18,12 @@ async function graph(data, month, interaction) {
 
     }
 
-    var month_data = {}
-
     var data_keys = Object.keys(data)
 
-    for (const i in data_keys) {
-        if (data_keys[i].includes(month)) {
-            month_data[data_keys[i]] = data[data_keys[i]]
-        }
-    }
-
-    var data_keys = Object.keys(month_data)
     var data_to_graph = []
 
     for (const i in data_keys) {
-        data_to_graph.push({x: data_keys[i].slice(8), y: month_data[data_keys[i]]})
+        data_to_graph.push({x: data_keys[i].slice(8), y: data[data_keys[i]]})
     }
 
 
@@ -134,7 +125,7 @@ client.on("interactionCreate", (interaction) => {
             .then(data => {
                 if (!data.status.toString().includes("ERROR"))
                 {
-                    graph(data.weight, data.current_month, interaction);
+                    graph(data.weight, interaction);
 
                 } else {
                     if (data.status.toString().includes("not in the database"))
@@ -162,11 +153,11 @@ client.on("interactionCreate", (interaction) => {
         {
             interaction.reply({content: "Getting data...", ephemeral: true})
 
-            fetch(`https://ruby-weight-management.herokuapp.com/weight-${interaction.user.id}/`)
+            fetch(`https://ruby-weight-management.herokuapp.com/weight/${interaction.user.id}/-/`)
             .then(response => response.json())
             .then(data => {
                 if (!data.status.toString().includes("ERROR")) {
-                    graph(data.weight, data.current_month, interaction);
+                    graph(data.weight, interaction);
                 } else {
                     if (data.status.toString().includes("not in the database"))
                     {
