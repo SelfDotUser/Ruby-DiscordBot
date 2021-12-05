@@ -123,12 +123,12 @@ client.on("interactionCreate", (interaction) => {
             })
             .then(response => response.json())
             .then(data => {
-                if (!data.status.toString().includes("ERROR"))
+                if (!data.message.toString().includes("ERROR"))
                 {
                     graph(data.weight, interaction);
 
                 } else {
-                    if (data.status.toString().includes("not in the database"))
+                    if (data.message.toString().includes("not in the database"))
                     {
                         const row = new MessageActionRow()
                         .addComponents(
@@ -140,7 +140,7 @@ client.on("interactionCreate", (interaction) => {
 
                         interaction.editReply({content: "You are not in the database. Would you like to add yourself? :eyes:", components: [row], ephemeral: true})
                     } else {
-                        interaction.editReply(data.status.toString())
+                        interaction.editReply(data.message.toString())
                     }
 
                 }
@@ -156,10 +156,10 @@ client.on("interactionCreate", (interaction) => {
             fetch(`https://ruby-weight-management.herokuapp.com/api/weight/-/`)
             .then(response => response.json())
             .then(data => {
-                if (!data.status.toString().includes("ERROR")) {
+                if (!data.message.toString().includes("ERROR")) {
                     graph(data.weight, interaction);
                 } else {
-                    if (data.status.toString().includes("not in the database"))
+                    if (data.message.toString().includes("not in the database"))
                     {
                         const row = new MessageActionRow()
                         .addComponents(
@@ -171,7 +171,7 @@ client.on("interactionCreate", (interaction) => {
 
                         interaction.editReply({content: "You are not in the database. Would you like to add yourself? :eyes:", components: [row], ephemeral: true})
                     } else {
-                        interaction.editReply(data.status.toString())
+                        interaction.editReply(data.message.toString())
                     }
                 }
 
@@ -199,11 +199,11 @@ client.on("interactionCreate", (interaction) => {
             })
             .then(response => response.json())
             .then(data => {
-                if (!data.status.toString().includes("ERROR")) {
+                if (!data.message.toString().includes("ERROR")) {
                     interaction.reply({content: "You're in! :partying_face: Hit up `/record` to start graphing!", ephemeral: true})
                 } else {
                     interaction.reply("An error occured. Please let Matt know.")
-                    console.log(data.status)
+                    console.log(data.message)
                 }
 
             }).catch(reason => {
