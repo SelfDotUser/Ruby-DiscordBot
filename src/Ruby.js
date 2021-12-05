@@ -1,4 +1,4 @@
-import configs from './config.json' // FIX THIS
+import configs from './config.json'
 import fetch from "node-fetch";
 import { ChartJSNodeCanvas } from "chartjs-node-canvas";
 import { Client, Intents, MessageActionRow, MessageButton } from "discord.js";
@@ -184,6 +184,16 @@ client.on("interactionCreate", (interaction) => {
                 interaction.editReply({content:"Sorry, an error occured. Please let SelfDotUser know.", ephemeral: true});
             })
 
+        } else if (interaction.commandName == "new") {
+                const row = new MessageActionRow()
+                .addComponents(
+                    new MessageButton()
+                        .setCustomId("new_user")
+                        .setLabel("Begin Journey")
+                        .setStyle("SUCCESS")
+                );
+
+            interaction.reply({content: "Are you ready? :eyes:", components: [row], ephemeral: true})
         }
     }
     else if (interaction.isButton())
