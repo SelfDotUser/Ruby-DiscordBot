@@ -4,7 +4,7 @@ import { ChartJSNodeCanvas } from "chartjs-node-canvas";
 import { Client, Intents, MessageActionRow, MessageButton } from "discord.js";
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
 
-const version = "2021.12.5 BETA";
+const version = "2021.12.5";
 
 async function graph(data, interaction) {
     var labels = [];
