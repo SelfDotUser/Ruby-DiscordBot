@@ -4,7 +4,7 @@ import { ChartJSNodeCanvas } from "chartjs-node-canvas";
 import { Client, Intents, MessageActionRow, MessageButton } from "discord.js";
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
 
-const version = "2021.12.3";
+const version = "2021.12.5 BETA";
 
 async function graph(data, interaction) {
     var labels = [];
@@ -116,7 +116,7 @@ client.on("interactionCreate", (interaction) => {
                 "weight": parseFloat(interaction.options.data[0].value)
             }
 
-            fetch("https://ruby-weight-management.herokuapp.com/update-weight/", {
+            fetch("https://ruby-weight-management.herokuapp.com/api/update-weight/", {
                 "method": "POST",
                 "body": JSON.stringify(data),
                 "headers": { "Content-Type": "application/json" }
@@ -153,7 +153,7 @@ client.on("interactionCreate", (interaction) => {
         {
             interaction.reply({content: "Getting data...", ephemeral: true})
 
-            fetch(`https://ruby-weight-management.herokuapp.com/weight/${interaction.user.id}/-/`)
+            fetch(`https://ruby-weight-management.herokuapp.com/api/weight/-/`)
             .then(response => response.json())
             .then(data => {
                 if (!data.status.toString().includes("ERROR")) {
@@ -189,9 +189,10 @@ client.on("interactionCreate", (interaction) => {
         {
             const data = {
                 "user_id": interaction.user.id,
+                "passcode": "NEED TO CREATE PASSCODE??" // **PASSCODE INTEGRATION NEEDED**
             }
 
-            fetch("https://ruby-weight-management.herokuapp.com/new-user/", {
+            fetch("https://ruby-weight-management.herokuapp.com/api/new-user/", {
                 "method": "POST",
                 "body": JSON.stringify(data),
                 "headers": { "Content-Type": "application/json" }
