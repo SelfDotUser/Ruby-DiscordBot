@@ -6,8 +6,10 @@ const configs = require("./config.json")
 const commands = [
   new SlashCommandBuilder().setName("record").setDescription("Records your current weight.").addStringOption(option => 
     option.setName("weight").setDescription("How much do you weight? :)").setRequired(true)
-  ),
-  new SlashCommandBuilder().setName("progress").setDescription("Wanna see your progress?")
+  ).addStringOption(option => 
+    option.setName("passcode").setDescription("Your passcode is needed to view this content.").setRequired(true)),
+  new SlashCommandBuilder().setName("progress").setDescription("Wanna see your progress?").addStringOption(option => 
+  option.setName("passcode").setDescription("Your passcode is needed to view this content.").setRequired(true))
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: '9' }).setToken(configs.BOT_TOKEN);

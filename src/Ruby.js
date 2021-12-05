@@ -1,4 +1,4 @@
-// import configs from './config.json'
+import configs from './config.json' // FIX THIS
 import fetch from "node-fetch";
 import { ChartJSNodeCanvas } from "chartjs-node-canvas";
 import { Client, Intents, MessageActionRow, MessageButton } from "discord.js";
@@ -119,7 +119,7 @@ client.on("interactionCreate", (interaction) => {
             fetch("https://ruby-weight-management.herokuapp.com/api/update-weight/", {
                 "method": "POST",
                 "body": JSON.stringify(data),
-                "headers": { "Content-Type": "application/json" }
+                "headers": { "Content-Type": "application/json", "Authorization": 'Basic ' + Buffer.from(`${interaction.user.id}:${interaction.options.data[1].value}`, 'binary').toString('base64') }
             })
             .then(response => response.json())
             .then(data => {
@@ -145,7 +145,7 @@ client.on("interactionCreate", (interaction) => {
 
                 }
             }).catch(reason => {
-                console.log("ERROR: I failed to get data from /update-weight/.\n" + reason.toString());
+                console.log("ERROR: I failed to get data from /api/update-weight/.\n" + reason.toString());
                 interaction.editReply({content: "Sorry, an error occured. Please let SelfDotUser know.", ephemeral: true})
             });
         }
@@ -153,7 +153,10 @@ client.on("interactionCreate", (interaction) => {
         {
             interaction.reply({content: "Getting data...", ephemeral: true})
 
-            fetch(`https://ruby-weight-management.herokuapp.com/api/weight/-/`)
+            fetch(`https://ruby-weight-management.herokuapp.com/api/weight/-/`, {
+            "method": "GET",
+            "headers": { "Content-Type": "application/json", "Authorization": 'Basic ' + Buffer.from(`${interaction.user.id}:${interaction.options.data[0].value}`, 'binary').toString('base64') }})
+        
             .then(response => response.json())
             .then(data => {
                 if (!data.message.toString().includes("ERROR")) {
@@ -177,7 +180,7 @@ client.on("interactionCreate", (interaction) => {
 
             })
             .catch(reason => {
-                console.log(`ERROR: Failed to get data from /weight-${interaction.user.id}/.` + "\n" + reason.toString())
+                console.log(`ERROR: Failed to get data from /api/weight/-/.` + "\n" + reason.toString())
                 interaction.editReply({content:"Sorry, an error occured. Please let SelfDotUser know.", ephemeral: true});
             })
 
@@ -187,9 +190,11 @@ client.on("interactionCreate", (interaction) => {
     {
         if (interaction.customId == "new_user")
         {
+            var passcode = Math.round(Math.random() * (999999 - 100000) + 100000).toString()
+
             const data = {
                 "user_id": interaction.user.id,
-                "passcode": "NEED TO CREATE PASSCODE??" // **PASSCODE INTEGRATION NEEDED**
+                "passcode": passcode
             }
 
             fetch("https://ruby-weight-management.herokuapp.com/api/new-user/", {
@@ -200,20 +205,20 @@ client.on("interactionCreate", (interaction) => {
             .then(response => response.json())
             .then(data => {
                 if (!data.message.toString().includes("ERROR")) {
-                    interaction.reply({content: "You're in! :partying_face: Hit up `/record` to start graphing!", ephemeral: true})
+                    interaction.reply({content: "You're in! :partying_face: Hit up `/record` to start graphing!\n\n**NOTE:** Your passcode is " + passcode + ". DO NOT SHARE IT WITH ANYBODY. You need this to access Ruby features.", ephemeral: true})
                 } else {
                     interaction.reply("An error occured. Please let Matt know.")
                     console.log(data.message)
                 }
 
             }).catch(reason => {
-                console.log("ERROR: Failed to post to /new-user/.\n" + reason.toString());
+                console.log("ERROR: Failed to post to /api/new-user/.\n" + reason.toString());
             });
         }
     }
 });
 
-client.login(process.env.BOT_TOKEN);
+client.login(configs.BOT_TOKEN);
 
 /*
 node --experimental-json-modules Ruby.js
