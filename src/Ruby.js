@@ -155,7 +155,8 @@ client.on("interactionCreate", (interaction) => {
 
             fetch(`https://ruby-weight-management.herokuapp.com/api/weight/-/`, {
             "method": "GET",
-            "headers": { "Content-Type": "application/json", "Authorization": 'Basic ' + Buffer.from(`${interaction.user.id}:${interaction.options.data[0].value}`, 'binary').toString('base64') }})
+            "headers": { "Content-Type": "application/json", "Authorization": 'Basic ' + Buffer.from(`${interaction.user.id}:${interaction.options.data[0].value}`, 'binary').toString('base64') }
+        })
         
             .then(response => response.json())
             .then(data => {

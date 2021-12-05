@@ -9,7 +9,8 @@ const commands = [
   ).addStringOption(option => 
     option.setName("passcode").setDescription("Your passcode is needed to view this content.").setRequired(true)),
   new SlashCommandBuilder().setName("progress").setDescription("Wanna see your progress?").addStringOption(option => 
-  option.setName("passcode").setDescription("Your passcode is needed to view this content.").setRequired(true))
+  option.setName("passcode").setDescription("Your passcode is needed to view this content.").setRequired(true)),
+  new SlashCommandBuilder().setName("new").setDescription("New user? Select this!")
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: '9' }).setToken(configs.BOT_TOKEN);
