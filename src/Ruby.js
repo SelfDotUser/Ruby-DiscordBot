@@ -1,4 +1,4 @@
-import configs from './config.json'
+// import configs from './config.json'
 import fetch from "node-fetch";
 import { ChartJSNodeCanvas } from "chartjs-node-canvas";
 import { Client, Intents, MessageActionRow, MessageButton } from "discord.js";
@@ -228,7 +228,7 @@ client.on("interactionCreate", (interaction) => {
     }
 });
 
-client.login(configs.BOT_TOKEN);
+client.login(process.env.BOT_TOKEN);
 
 /*
 node --experimental-json-modules Ruby.js
