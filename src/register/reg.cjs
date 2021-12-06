@@ -1,9 +1,9 @@
 const {SlashCommandBuilder} = require("@discordjs/builders")
 const {REST} = require("@discordjs/rest")
 const {Routes} = require("discord-api-types/v9")
-import {config} from "dotenv"
+const dotenv = require("dotenv")
 
-config()
+dotenv.config()
 
 const commands = [
   new SlashCommandBuilder().setName("record").setDescription("Records your current weight.").addStringOption(option => 

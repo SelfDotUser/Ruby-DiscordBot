@@ -5,8 +5,8 @@
   "type": "module",
   "main": "Ruby.js",
   "scripts": {
-    "test": "node ./src/Ruby.js",
-    "start": "node ./src/Ruby.js"
+    "start": "node ./src/Ruby.js",
+    "regc": "node ./src/register/reg.cjs"
   },
   "author": "SelfDotUser",
   "license": "ISC",
