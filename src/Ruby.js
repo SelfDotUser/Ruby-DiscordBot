@@ -4,7 +4,7 @@ import { ChartJSNodeCanvas } from "chartjs-node-canvas";
 import { Client, Intents, MessageActionRow, MessageButton } from "discord.js";
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
 
-const version = "2021.12.5";
+const version = "2021.12.6";
 
 async function graph(data, interaction) {
     var labels = [];
@@ -218,8 +218,7 @@ client.on("interactionCreate", (interaction) => {
                 if (!data.message.toString().includes("ERROR")) {
                     interaction.reply({content: "You're in! :partying_face: Hit up `/record` to start graphing!\n\n**NOTE:** Your passcode is " + passcode + ". DO NOT SHARE IT WITH ANYBODY. You need this to access Ruby features.", ephemeral: true})
                 } else {
-                    interaction.reply("An error occured. Please let Matt know.")
-                    console.log(data.message)
+                    interaction.reply({content: "```" + data.message.toString() + "```", ephemeral: true})
                 }
 
             }).catch(reason => {
