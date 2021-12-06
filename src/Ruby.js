@@ -1,10 +1,14 @@
-// import configs from './config.json'
 import fetch from "node-fetch";
 import { ChartJSNodeCanvas } from "chartjs-node-canvas";
 import { Client, Intents, MessageActionRow, MessageButton } from "discord.js";
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
+import {config} from "dotenv"
 
-const version = "2021.12.6";
+const version = "2021.12.6 TS BETA";
+
+if (version.includes("BETA")) {
+    config()
+}
 
 async function graph(data, interaction) {
     var labels = [];
@@ -229,7 +233,3 @@ client.on("interactionCreate", (interaction) => {
 });
 
 client.login(process.env.BOT_TOKEN);
-
-/*
-node --experimental-json-modules Ruby.js
-*/

@@ -1,7 +1,9 @@
 const {SlashCommandBuilder} = require("@discordjs/builders")
 const {REST} = require("@discordjs/rest")
 const {Routes} = require("discord-api-types/v9")
-const configs = require("./config.json")
+import {config} from "dotenv"
+
+config()
 
 const commands = [
   new SlashCommandBuilder().setName("record").setDescription("Records your current weight.").addStringOption(option => 
@@ -13,7 +15,7 @@ const commands = [
   new SlashCommandBuilder().setName("new").setDescription("New user? Select this!")
 ].map(command => command.toJSON());
 
-const rest = new REST({ version: '9' }).setToken(configs.BOT_TOKEN);
+const rest = new REST({ version: '9' }).setToken(process.env.BOT_TOKEN);
 
 (async () => {
   try {
@@ -21,7 +23,7 @@ const rest = new REST({ version: '9' }).setToken(configs.BOT_TOKEN);
     
 
     await rest.put(
-      Routes.applicationGuildCommands(configs.BOT_CLIENT_ID, configs.GUILD_ID),
+      Routes.applicationGuildCommands(process.env.BOT_CLIENT_ID, process.env.GUILD_ID),
       { body: commands },
     );
 

@@ -5,8 +5,8 @@
   "type": "module",
   "main": "Ruby.js",
   "scripts": {
-    "test": "node --experimental-json-modules ./src/Ruby.js",
-    "start": "node --experimental-json-modules ./src/Ruby.js"
+    "test": "node ./src/Ruby.js",
+    "start": "node ./src/Ruby.js"
   },
   "author": "SelfDotUser",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "chartjs-node-canvas": "^4.1.5",
     "discord-api-types": "^0.25.2",
     "discord.js": "^13.3.1",
+    "dotenv": "^10.0.0",
     "node-fetch": "^3.1.0"
   },
   "devDependencies": {
