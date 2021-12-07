@@ -2,11 +2,11 @@
   "name": "ruby-discord-client",
   "version": "1.0.0",
   "description": "The Ruby Discord client!",
-  "type": "module",
   "main": "Ruby.js",
   "scripts": {
-    "start": "node ./src/Ruby.js",
-    "regc": "node ./src/register/reg.cjs"
+    "startb": "node ./src/RubyBackup.js",
+    "reg": "node ./src/register/reg.cjs",
+    "startts": "tsc ./src/Ruby.ts && node ./src/Ruby.js"
   },
   "author": "SelfDotUser",
   "license": "ISC",
@@ -14,6 +14,7 @@
     "@discordjs/builders": "^0.8.2",
     "@discordjs/rest": "^0.1.0-canary.0",
     "canvas": "^2.8.0",
+    "chart.js": "^3.6.2",
     "chartjs-node-canvas": "^4.1.5",
     "discord-api-types": "^0.25.2",
     "discord.js": "^13.3.1",
