@@ -1,1 +1,1 @@
-worker: node --experimental-json-modules ./src/Ruby.js
+worker: tsc ./src/Ruby.ts && node ./src/Ruby.js
