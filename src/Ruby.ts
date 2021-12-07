@@ -6,7 +6,7 @@ import { config } from "dotenv";
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
 
-const version = "2021.12.7 TS";
+const version = "2021.12.6 TS";
 
 if (version.includes("BETA")) {
     config();
