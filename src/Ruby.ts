@@ -6,7 +6,7 @@ import { config } from "dotenv";
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
 
-const version = "2021.12.7 BETA";
+const version = "2021.12.7 TS";
 
 if (version.includes("BETA")) {
     config();
@@ -18,7 +18,6 @@ interface ServerData {
 }
 
 async function graph(data: ServerData, interaction: CommandInteraction): Promise<void> {
-    console.log("Attempting to graph...");
     var labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
                   11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
                   21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
