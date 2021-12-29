@@ -6,7 +6,7 @@ import { config } from "dotenv";
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
 
-const version = "2021.12.6 TS";
+const version = "2021.12.29";
 
 if (version.includes("BETA")) {
     config();
@@ -25,9 +25,13 @@ async function graph(data: ServerData, interaction: CommandInteraction): Promise
     var data_keys = Object.keys(data.weight);
 
     var data_to_graph = [];
+    var weight_from_server: number[] = [];
 
     for (const i in data_keys) {
-        data_to_graph.push({ x: parseInt(data_keys[i].slice(8)), y: data.weight[data_keys[i]] });
+        if (data.weight[data_keys[i]] != 0.0) {
+            data_to_graph.push({ x: parseInt(data_keys[i].slice(8)), y: data.weight[data_keys[i]] });
+            weight_from_server.push(data.weight[data_keys[i]]);
+        }
     }
 
     
@@ -59,8 +63,8 @@ async function graph(data: ServerData, interaction: CommandInteraction): Promise
             scales: {
                 y: {
                     beginAtZero: false,
-                    suggestedMin: Math.min(...Object.values(data.weight))-10,
-                    suggestedMax: Math.max(...Object.values(data.weight))+10
+                    suggestedMin: Math.min(...weight_from_server)-10,
+                    suggestedMax: Math.max(...weight_from_server)+10
                 }
             },
             devicePixelRatio: 2
@@ -96,7 +100,7 @@ client.on("ready", () => {
     If version is in beta, it's in DND with "Playing with beta features!" as its status. Otherwise, it's only online.
     */
     if (version.includes("BETA")) {
-        client.user.setPresence({ activities: [{ name: "with TypeScript!" }], status: "dnd" });
+        client.user.setPresence({ activities: [{ name: "with beta features!" }], status: "dnd" });
         console.log("-----> WARNING: This is a beta version. Presence set to Do Not Disturb.");
     } else {
         client.user.setPresence({ status: "online" });
